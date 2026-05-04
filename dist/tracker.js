@@ -30,12 +30,16 @@
     }
 
     function getVisitorId() {
-        let id = localStorage.getItem('bastody_visitor_id');
-        if (!id) {
-            id = crypto.randomUUID();
-            localStorage.setItem('bastody_visitor_id', id);
+        try {
+            let id = localStorage.getItem('bastody_visitor_id');
+            if (!id) {
+                id = crypto.randomUUID();
+                localStorage.setItem('bastody_visitor_id', id);
+            }
+            return id;
+        } catch {
+            return crypto.randomUUID();
         }
-        return id;
     }
 
     function getEndpoint() {

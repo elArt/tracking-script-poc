@@ -56,6 +56,9 @@ Covered: fetch keepalive fallback, pagehide over beforeunload,
 threshold 0.99 over 1.0 (subpixel rendering bug),
 video.duration NaN check before percentage calculation.
 
+localStorage wrapped in try/catch — Safari in private mode throws
+when accessing localStorage. Fallback generates a session-only ID.
+
 Would also cover: pageshow + event.persisted for bfcache,
 aggressive flush due to ITP 7-day localStorage limit,
 IO fallback inside iframes on iOS.

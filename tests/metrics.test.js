@@ -55,23 +55,23 @@ describe('trackViewedSecond', () => {
     });
 
     test('adds second when visible and playing', () => {
-        trackViewedSecond(5.5, true, false, viewedSeconds);
+        trackViewedSecond(5.5, true, false, viewedSeconds, 10);
         expect(viewedSeconds.has(5)).toBe(true);
     });
 
     test('does not add second when not visible', () => {
-        trackViewedSecond(5.5, false, false, viewedSeconds);
+        trackViewedSecond(5.5, false, false, viewedSeconds, 10);
         expect(viewedSeconds.size).toBe(0);
     });
 
     test('does not add second when paused', () => {
-        trackViewedSecond(5.5, true, true, viewedSeconds);
+        trackViewedSecond(5.5, true, true, viewedSeconds, 10);
         expect(viewedSeconds.size).toBe(0);
     });
 
     test('deduplicates same second', () => {
-        trackViewedSecond(5.1, true, false, viewedSeconds);
-        trackViewedSecond(5.8, true, false, viewedSeconds);
+        trackViewedSecond(5.1, true, false, viewedSeconds, 10);
+        trackViewedSecond(5.8, true, false, viewedSeconds, 10);
         expect(viewedSeconds.size).toBe(1);
     });
 });
