@@ -1,0 +1,14 @@
+{
+    "name": "bastody-tracker",
+    "version": "1.0.0",
+    "scripts": {
+        "test": "vitest run",
+        "build": "rollup -c",
+        "serve": "serve ."
+    },
+    "devDependencies": {
+        "rollup": "^4.0.0",
+        "vitest": "^1.0.0",
+        "serve": "^14.0.0"
+    }
+}

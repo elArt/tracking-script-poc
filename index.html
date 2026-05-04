@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Page</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 150vw;
+      padding: 4vw;
+      font-family: sans-serif;
+    }
+
+    #player {
+      width: 60%;
+      margin: 0 auto;
+      position: relative;
+      background: #000;
+    }
+
+    #player video {
+      width: 100%;
+      display: block;
+    }
+
+    #ad-container {
+      position: relative;
+    }
+
+    #skip-button {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.6rem 1.2rem;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      font-size: 0.95rem;
+      border-radius: 2px;
+    }
+
+    #skip-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="player">
+    <div id="ad-container" data-track="ad">
+      <video id="ad-video" src="./A.mp4" autoplay muted playsinline controls></video>
+      <button id="skip-button" disabled>Skip in 1s</button>
+    </div>
+    <video id="main-video" src="./video.mp4" controls playsinline style="display: none;"></video>
+  </div>
+
+  <script>
+    const adContainer = document.getElementById('ad-container');
+    const adVideo = document.getElementById('ad-video');
+    const mainVideo = document.getElementById('main-video');
+    const skipButton = document.getElementById('skip-button');
+
+    let secondsLeft = 1;
+    const skipTimer = setInterval(() => {
+      secondsLeft--;
+      if (secondsLeft <= 0) {
+        skipButton.textContent = 'Skip Ad ▶';
+        skipButton.disabled = false;
+        clearInterval(skipTimer);
+      } else {
+        skipButton.textContent = 'Skip in ' + secondsLeft + 's';
+      }
+    }, 1000);
+
+    function finishAd() {
+      adContainer.style.display = 'none';
+      mainVideo.style.display = 'block';
+      mainVideo.play().catch(() => {});
+    }
+
+    adVideo.addEventListener('ended', finishAd);
+    skipButton.addEventListener('click', finishAd);
+  </script>
+      <script
+        src="dist/tracker.js"
+        data-endpoint="https://webhook.site/651d6dc4-0a6f-42c5-8223-aaffa7740ad0"
+    ></script>
+</body>
+
+</html>

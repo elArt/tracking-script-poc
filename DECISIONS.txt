@@ -1,0 +1,61 @@
+Delivery mechanism
+Beacon → fetch keepalive → sync XHR fallback chain.
+
+Beacon is the most reliable way to send data when the page is closing.
+fetch keepalive covers older Safari versions where Beacon was not supported.
+sync XHR is the last resort — blocks the main thread but guarantees delivery.
+
+When to flush
+Listening to four triggers: visibilitychange → hidden, pagehide,
+video ended, and video error.
+
+After each flush, state is reset (events, viewedSeconds, unmuteSecond)
+to avoid losing data if the user switches tabs and comes back.
+A boolean flag sent prevents duplicate sends if multiple triggers
+fire at the same time — it resets after each flush.
+
+Viewed seconds
+Using Set() for automatic deduplication — rewinding the video
+does not count the same second twice.
+
+Edge case: Math.floor(currentTime) can equal Math.floor(duration)
+at the end of playback, adding an extra second beyond actual duration.
+Fixed by checking second < Math.floor(duration) before adding to Set.
+
+Beacon content-type
+Used text/plain instead of application/json to avoid CORS preflight.
+Most tracking endpoints accept both formats.
+
+Code structure
+Split into metrics.js (pure logic with named exports, used by both
+tracker.js and tests) and tracker.js (initialization and event listeners).
+Rollup bundles both into a single dist/tracker.js wrapped in IIFE
+for scope isolation on third-party pages.
+
+What I skipped
+Retry logic, localStorage buffer, schema versioning, TypeScript,
+server-side deduplication via event ID — not critical for a 2h PoC.
+
+Skip button — script has no knowledge of it. Data will be sent on
+next visibilitychange or pagehide. In production would use
+MutationObserver or player public API.
+
+Skip button side effect — when Skip is clicked, adVideo continues
+playing in the background.
+
+What I'd do in production
+TypeScript, localStorage buffer with backoff, unique event IDs,
+schema_v field, Playwright E2E, CI pipeline, versioned CDN artifacts,
+Sentry monitoring.
+
+Would clarify: viewed_seconds as count vs array, all unmute events
+vs first only, multiple ad elements per page support.
+
+Safari
+Covered: fetch keepalive fallback, pagehide over beforeunload,
+threshold 0.99 over 1.0 (subpixel rendering bug),
+video.duration NaN check before percentage calculation.
+
+Would also cover: pageshow + event.persisted for bfcache,
+aggressive flush due to ITP 7-day localStorage limit,
+IO fallback inside iframes on iOS.
