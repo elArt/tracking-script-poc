@@ -33,8 +33,8 @@ Rollup bundles both into a single dist/tracker.js wrapped in IIFE
 for scope isolation on third-party pages.
 
 What I skipped
-Retry logic, localStorage buffer, schema versioning, TypeScript,
-server-side deduplication via event ID — not critical for a 2h PoC.
+Retry logic with exponential backoff and jitter, throttle on timeupdate event, localStorage buffer, schema versioning,
+TypeScript, server-side deduplication via event ID — not critical for a 2h PoC.
 
 Skip button — script has no knowledge of it. Data will be sent on
 next visibilitychange or pagehide. In production would use
